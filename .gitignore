@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+media/
+venv/
+*.log
+*.pot
+
+# Ignore Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+*/migrations/*.pyo
+# Ignore virtual environment
+venv/ 
+# Ignore IDE files
+.idea/
+.vscode/
+# Ignore OS files
+.DS_Store
+Thumbs.db
