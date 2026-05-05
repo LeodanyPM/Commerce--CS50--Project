@@ -2,12 +2,6 @@
 
 {% block body %}
     <div class="container">
-        <h1>📢 Mis Anuncios</h1>
-        <div class="subtitulo">
-            {% if listing %}
-                🏷️ {{ listing|length }} Ad{% if listing|length != 1 %}s{% endif %} available
-            {% endif %}
-        </div>
         
         {% if listing %}
             <!-- Grid de tarjetas -->
