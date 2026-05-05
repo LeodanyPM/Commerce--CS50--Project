@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+   <form method="POST" enctype="multipart/form-data">
+   {% csrf_token %}
+   <div class="mb-3">
+       <label> Title: </label>
+       {{form.title}}
+       {{form.title.errors}}
+   </div>
+   
+   <div class="mb-3">
+       <label> {{form.description.label}} </label>
+       {{form.description}}
+       {{form.description.errors}}
+   </div>
+   <div class="mb-3">
+       <label> {{form.price.label}} </label>
+       {{form.price}}
+       {{form.price.errors}}
+   </div>
+   <div class="mb-3">
+       <label> {{form.category.label}} </label>
+       {{form.category}}
+       {{form.category.errors}}
+   </div>
+   <div class="mb-3">
+       <label> {{form.image.label}} </label>
+       {{form.image}}
+       {{form.image.errors}}
+   </div>
+   <button type="submit" class="btn btn-primary">Crear Listing</button>
+        
+{% endblock %}
+

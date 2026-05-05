@@ -1,7 +1,68 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-
-    TODO
+    <div class="container">
+        <h1>📢 Mis Anuncios</h1>
+        <div class="subtitulo">
+            {% if listing %}
+                🏷️ {{ listing|length }} Ad{% if listing|length != 1 %}s{% endif %} available
+            {% endif %}
+        </div>
+        
+        {% if listing %}
+            <!-- Grid de tarjetas -->
+            <div class="grid-container">
+                {% for ad in listing %}
+                    <div class="card">
+                        <!-- Imagen de la tarjeta -->
+                        <div class="card-imagen">
+                            {% if ad.image  %}
+                                <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                                
+                            {% else %}
+                                <div class="sin-imagen">
+                                    Not image
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Información de la tarjeta -->
+                        <div class="card-info">
+                            <div class="card-titulo">
+                                {{ ad.title }}
+                            </div>
+                            
+                            <div class="card-categoria">
+                                {{ ad.category }}
+                            </div>
+                            
+                            <div class="card-descripcion">
+                                {{ ad.description }}
+                            </div>
+                            
+                            <div class="card-precio">
+                                {{ ad.price }}
+                            </div>
+                            
+                            {% if ad.date %}
+                                <div class="card-fecha">
+                                    📅 {{ ad.date|date:"d/m/Y" }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="sin-anuncios">
+                <p>😕 No hay anuncios disponibles.</p>
+                <p>¡Sé el primero en publicar uno!</p>
+            </div>
+        {% endif %}
+    </div>
+    
 {% endblock %}
+
+
+
+

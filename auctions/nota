@@ -1,0 +1,6 @@
+ <h2>Create Listings</h2>
+    <form method="POST" enctype="multipart/form-data">
+	  {% csrf_token %}
+	  {{ form.as_p }}  <!-- o .as_table / .as_ul -->
+	  <button type="submit">Guardar</button>
+    </form>
