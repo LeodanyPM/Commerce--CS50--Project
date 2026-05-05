@@ -9,7 +9,7 @@ class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_ads")
     title = models.CharField(max_length=60)
     category = models.CharField(max_length=60, null=True)
-    description = models.TextField()
+    description = models.TextField(default="")
     price = models.DecimalField(max_digits=10, decimal_places=2)  
     date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='ads_images/', blank=True, null=True)  
