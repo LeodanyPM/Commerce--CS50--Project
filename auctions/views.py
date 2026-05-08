@@ -79,3 +79,8 @@ def create_listing(request):
         form = ListingForm()  # GET: formulario vacío
     return render(request, 'auctions/create_listing.html', {'form': form})	
     
+def listing(request, id):
+    ad = Listing.objects.get(id=id)
+    return render(request, 'auctions/listing.html', {'ad':'ad'})
+    
+    

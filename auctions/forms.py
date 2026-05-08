@@ -1,5 +1,6 @@
 from django import forms
 from .models import Listing
+#, Comment
 
 class ListingForm(forms.ModelForm):
     class Meta:
@@ -16,3 +17,12 @@ class ListingForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 6, 'class': 'form-control'}),
         }
         # fields = '__all__'  # o excluir: exclude = ['creado_en']
+        
+"""class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        field = ['comment']
+        labels = {'user': Comment.user, 'comment': 'Comment' }
+        widgets = {
+              'comment': forms.Textarea()
+        } """

@@ -2,12 +2,7 @@
 
 {% block body %}
     <div class="container">
-        
-        {% if listing %}
-            <!-- Grid de tarjetas -->
-            <a href="{% url 'listing' %}">
-            <div class="grid-container">
-                {% for ad in listing %}
+
                     <div class="card">
                         <!-- Imagen de la tarjeta -->
                         <div class="card-imagen">
@@ -45,20 +40,8 @@
                                 </div>
                             {% endif %}
                         </div>
-                        </a>
                     </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="sin-anuncios">
-                <p>😕 No hay anuncios disponibles.</p>
-                <p>¡Sé el primero en publicar uno!</p>
-            </div>
-        {% endif %}
+
     </div>
     
 {% endblock %}
-
-
-
-
