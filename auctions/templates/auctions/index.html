@@ -5,9 +5,9 @@
         
         {% if listing %}
             <!-- Grid de tarjetas -->
-            <a href="{% url 'listing' %}">
             <div class="grid-container">
                 {% for ad in listing %}
+                    <a href="{% url 'listing' ad.id %}">
                     <div class="card">
                         <!-- Imagen de la tarjeta -->
                         <div class="card-imagen">
@@ -45,8 +45,8 @@
                                 </div>
                             {% endif %}
                         </div>
-                        </a>
                     </div>
+                    </a>
                 {% endfor %}
             </div>
         {% else %}

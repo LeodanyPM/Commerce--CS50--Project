@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import ListingForm
 from django.contrib import messages
+from .util import optimize_image
 
 from .models import User, Listing
 
@@ -70,6 +71,7 @@ def create_listing(request):
     if request.method == "POST":
         form = ListingForm(request.POST, request.FILES) 
         if form.is_valid():
+            
             listing = form.save(commit=False)
             listing.user = request.user
             listing.save()
@@ -77,10 +79,11 @@ def create_listing(request):
             return HttpResponseRedirect(reverse("index"))   
     else:
         form = ListingForm()  # GET: formulario vacío
-    return render(request, 'auctions/create_listing.html', {'form': form})	
+    return render(request, 'auctions/create_listing.html', {'form': form})
     
+
 def listing(request, id):
     ad = Listing.objects.get(id=id)
-    return render(request, 'auctions/listing.html', {'ad':'ad'})
+    return render(request, 'auctions/listing.html', {'ad': ad})
     
     
