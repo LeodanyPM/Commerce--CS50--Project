@@ -38,7 +38,27 @@
                 </li>
             {% endif %}
         </ul>
-        <hr>
+        {% if messages %}
+		<div class="w-100 text-left">
+		{% for message in messages %}
+		    <span class="badge badge-{{ message.tags }} py-2 px-3 small auto-dismiss-msg" 
+			  style="font-weight: normal; width: auto;">
+			{{ message }}
+		    </span>
+		{% endfor %}
+		</div> 
+		<script>
+		    document.addEventListener('DOMContentLoaded', function() {
+		    document.querySelectorAll('.auto-dismiss-msg').forEach(function(el) {
+			setTimeout(function() {
+			    el.style.transition = 'opacity 0.3s ease';
+			    el.style.opacity = '0';
+			    setTimeout(() => el.remove(), 300);
+			}, 3000);
+		        });
+		        });
+		</script>
+	{% endif %}
         {% block body %}
         {% endblock %}
     </body>
