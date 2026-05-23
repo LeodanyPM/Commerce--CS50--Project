@@ -95,5 +95,12 @@ def watchlist(request):
         listings = Listing.objects.filter(watched_by__user=request.user).select_related('user')  # Opcional: si necesitas datos del creador
         context = {'listing':listings}
         return render(request, 'auctions/watchlist.html', context) 
+        
+
+@login_required(login_url='/login') 
+def my_listings(request):
+    my_listings= Listing.objects.filter(user=request.user)
+    context = {'listing':my_listings}
+    return render(request, 'auctions/my_listings.html',context)
     
     
