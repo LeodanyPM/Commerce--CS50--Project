@@ -12,7 +12,7 @@ from .models import User, Listing, Watchlist
 
 
 def index(request):
-    my_data = Listing.objects.all()
+    my_data = Listing.objects.filter(active=True)
     context = {'listing' : my_data }    
     return render(request, "auctions/index.html", context)
 

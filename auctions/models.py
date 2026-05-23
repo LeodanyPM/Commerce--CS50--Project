@@ -15,7 +15,9 @@ class Listing(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)  
     date = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='ads_images/', blank=True, null=True)  
+    image = models.ImageField(upload_to='ads_images/', blank=True, null=True)
+    active = models.BooleanField(default=True)
+    winner = models.ForeignKey(User,null=True, blank=True, on_delete=models.CASCADE, related_name="winner") 
     
     
     class Meta:
