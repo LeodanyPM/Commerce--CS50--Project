@@ -45,4 +45,12 @@ class Listing(models.Model):
      
      class Meta:
         ordering = ['-date']"""
-      
+class Watchlist(models.Model):
+      user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+      listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watched_by")
+      date = models.DateTimeField(auto_now_add=True)
+      class Meta:
+          constraints = [models.UniqueConstraint(fields=['user', 'listing'], name='unique_user_listing')]
+          indexes = [models.Index(fields=['user',])]
+      def __str__(self):
+      	 return  f"{self.user.username} : {self.listing.title}"    

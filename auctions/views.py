@@ -8,7 +8,7 @@ from .forms import ListingForm
 from django.contrib import messages
 from .util import optimize_image
 
-from .models import User, Listing
+from .models import User, Listing, Watchlist
 
 
 def index(request):
@@ -87,5 +87,13 @@ def create_listing(request):
 def listing(request, id):
     ad = Listing.objects.get(id=id)
     return render(request, 'auctions/listing.html', {'ad': ad})
+    
+@login_required(login_url='/login') 
+def watchlist(request):	
+	# Obtener directamente los Listings que el usuario sigue
+        # Ajusta 'watchlist_items' al related_name que definiste en tu modelo
+        listings = Listing.objects.filter(watched_by__user=request.user).select_related('user')  # Opcional: si necesitas datos del creador
+        context = {'listing':listings}
+        return render(request, 'auctions/watchlist.html', context) 
     
     
