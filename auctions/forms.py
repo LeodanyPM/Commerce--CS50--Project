@@ -1,5 +1,5 @@
 from django import forms
-from .models import Listing
+from .models import Listing, Comment, Bid
 #, Comment
 
 class ListingForm(forms.ModelForm):
@@ -18,11 +18,28 @@ class ListingForm(forms.ModelForm):
         }
         # fields = '__all__'  # o excluir: exclude = ['creado_en']
         
-"""class CommentForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        field = ['comment']
-        labels = {'user': Comment.user, 'comment': 'Comment' }
+        fields = ['comment']
+        labels = {'comment': 'Comment' }
         widgets = {
-              'comment': forms.Textarea()
-        } """
+              'comment': forms.Textarea(attrs={
+               'rows': 3, 
+               'class': 'form-control', 
+               'placeholder': 'Escribe tu opinión aquí...'
+            })
+        }
+        
+class BidForm(forms.Form):
+    bid_amount = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        min_value=0.01,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Monto de tu puja',
+            'step': '0.01',
+            'required': True
+        })
+    ) 
