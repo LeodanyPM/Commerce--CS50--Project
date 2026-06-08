@@ -194,7 +194,7 @@ def place_bid(request, listing_id):
 
         
         Bid.objects.create(listing=listing, user=request.user, amount=amount)
-        messages.success(request, f"¡Bid of ${amount} successfully registered!")
+        messages.success(request, f"Bid of ${amount} successfully registered!")
 
     return redirect('listing', id=listing_id)
     

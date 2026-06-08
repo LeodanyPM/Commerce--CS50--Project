@@ -1,5 +1,5 @@
 from django import forms
-from .models import Listing, Comment, Bid
+from .models import Listing, Comment
 
 
 
@@ -44,15 +44,4 @@ class CommentForm(forms.ModelForm):
             })
         }
         
-class BidForm(forms.Form):
-    bid_amount = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        min_value=0.01,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Bid amount',
-            'step': '0.01',
-            'required': True
-        })
-    ) 
+
