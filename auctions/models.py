@@ -29,21 +29,23 @@ class Listing(models.Model):
     
     class Meta:
         ordering = ['-date']
-    
+
     def save(self, *args, **kwargs):
+        
         if self.image and hasattr(self.image, 'file'):
-            try:
-                optimized = optimize_image(
-                    self.image.file,
-                    max_size=(1200, 1200),
-                    quality=85
-                )
-                self.image = optimized
-            except Exception as e:
-                print(f"Error optimizing: {e}")
+            if isinstance(self.image.file, InMemoryUploadedFile):
+                try:
+                    optimized = optimize_image(
+                        self.image.file,
+                        max_size=(1200, 1200),
+                        quality=85
+                    )
+                    self.image = optimized
+                except Exception as e:
+                    print(f"Error optimizing: {e}")
         
         super().save(*args, **kwargs)
-            
+                
     def __str__(self):
         return self.title
     
