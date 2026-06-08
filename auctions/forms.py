@@ -1,23 +1,36 @@
 from django import forms
 from .models import Listing, Comment, Bid
-#, Comment
+
+
 
 class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ['title','category', 'price',  'description', 'image']
+        fields = ['title', 'category', 'price', 'description', 'image']
         labels = {
-            'title': 'Títle:',
-            'category': 'Category:',
-            'price': 'Price:',
-            'description' : 'Description:',
-            'image': 'Upload image:' 
+            'title': 'Title',
+            'category': 'Category',
+            'price': 'Starting Price',
+            'description': 'Description',
+            'image': 'Upload Image'
         }
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 6, 'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'image': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
-        # fields = '__all__'  # o excluir: exclude = ['creado_en']
         
+        error_messages = {
+            'title': {'required': 'The title is required.'},
+            'category': {'required': 'Select a category.'},
+            'price': {'required': 'Enter a starting price.'},
+            'description': {'required': 'The description cannot be empty.'},
+        }
+        
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -27,7 +40,7 @@ class CommentForm(forms.ModelForm):
               'comment': forms.Textarea(attrs={
                'rows': 3, 
                'class': 'form-control', 
-               'placeholder': 'Escribe tu opinión aquí...'
+               'placeholder': 'Write your opinion here...'
             })
         }
         
@@ -38,7 +51,7 @@ class BidForm(forms.Form):
         min_value=0.01,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Monto de tu puja',
+            'placeholder': 'Bid amount',
             'step': '0.01',
             'required': True
         })

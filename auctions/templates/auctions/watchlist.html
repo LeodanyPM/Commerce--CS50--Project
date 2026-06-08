@@ -1,60 +1,24 @@
 {% extends "auctions/layout.html" %}
-{% block body %}
-    <div class="container">
-        
-        {% if listing %}
-            <!-- Grid de tarjetas -->
-            <div class="grid-container">
-                {% for ad in listing %}
-                    <a href="{% url 'listing' ad.id %}">
-                    <div class="card">
-                        <!-- Imagen de la tarjeta -->
-                        <div class="card-imagen">
-                            {% if ad.image  %}
-                                <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
-                                
-                            {% else %}
-                                <div class="sin-imagen">
-                                    Not image
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Información de la tarjeta -->
-                        <div class="card-info">
-                            <div class="card-titulo">
-                                {{ ad.title }}
-                            </div>
-                            
-                            <div class="card-categoria">
-                                {{ ad.category }}
-                            </div>
-                            
-                            <div class="card-descripcion">
-                                {{ ad.description }}
-                            </div>
-                            
-                            <div class="card-precio">
-                                {{ ad.price }}
-                            </div>
-                            
-                            {% if ad.date %}
-                                <div class="card-fecha">
-                                    📅 {{ ad.date|date:"d/m/Y" }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    </a>
-                {% endfor %}
-            </div>
-        {% else %}            
-            <div class="sin-anuncios">
-                <p>😕 No hay anuncios disponibles.</p>
-                <a class="nav-link" href="{% url 'index' %}">Busca anuncios</a>
-            </div>
-        {% endif %}
-    </div>
-    
-{% endblock %}
 
+{% block body %} 
+<div class="container py-4">
+    {% if listing %}
+        <!-- listings -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3  row-cols-lg-4 g-4">
+            {% for ad in listing %}
+                 <div class="col">
+                     {% include "auctions/partials/listing_card.html" with listing=ad %}
+                 </div>
+            {% endfor %}
+        </div> 
+    {% else %}
+        <!-- empty -->
+        <div class="text-center py-5">
+            <div class="display-1 text-muted mb-3">⭐</div>
+            <h4 class="text-muted mb-2">Your watchlist is empty</h4>
+            <p class="text-muted mb-4">Follow items to keep track of auctions you're interested in.</p>
+            <a href="{% url 'index' %}" class="btn btn-primary">Browse Active Listings</a>
+        </div> 
+    {% endif %}
+</div>
+{% endblock %}

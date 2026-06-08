@@ -1,35 +1,69 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-   <form method="POST" enctype="multipart/form-data">
-   {% csrf_token %}
-   <div class="mb-3">
-       <label> Title: </label>
-       {{form.title}}
-       {{form.title.errors}}
-   </div>
-   
-   <div class="mb-3">
-       <label> {{form.description.label}} </label>
-       {{form.description}}
-       {{form.description.errors}}
-   </div>
-   <div class="mb-3">
-       <label> {{form.price.label}} </label>
-       {{form.price}}
-       {{form.price.errors}}
-   </div>
-   <div class="mb-3">
-       <label> {{form.category.label}} </label>
-       {{form.category}}
-       {{form.category.errors}}
-   </div>
-   <div class="mb-3">
-       <label> {{form.image.label}} </label>
-       {{form.image}}
-       {{form.image.errors}}
-   </div>
-   <button type="submit" class="btn btn-primary">Crear Listing</button>
-        
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h2 class="card-title mb-0 font-weight-bold">Create New Listing</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Title --> 
+                        <div class="mb-3">
+                            {{ form.title.label_tag }}
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                 <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- category  -->
+                        <div class="mb-3">
+                            {{ form.category.label_tag }}
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- price -->
+                        <div class="mb-3">
+                            {{ form.price.label_tag }}
+                            {{ form.price }}
+                            {% if form.price.errors %}
+                                 <div class="text-danger small mt-1">{{ form.price.errors }}</div>
+                            {% endif %} 
+                        </div>
+
+                        <!-- Descrition  -->
+                        <div class="mb-3"> 
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                 <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- image --> 
+                        <div class="mb-3">
+                            {{ form.image.label_tag }}
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                                 <div class="text-danger small mt-1">{{ form.image.errors }}</div>
+                            {% endif %} 
+                        </div>
+
+                        <hr> 
+                        <button type="submit" class="btn btn-primary btn-block">Create Listing</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 

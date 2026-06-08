@@ -1,11 +1,29 @@
+
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h1>Categories</h1>
-<ul>
-     {%for category in categories %}
-     <a href="{% url 'categories_listing' category %}">
-         <li> {{category}} </li>
-     </a>
-     {% endfor%}
+<div class="container py-4">
+    <h2 class="mb-4 font-weight-bold">Categories</h2>
+     
+    {% if categories %}
+        
+        <div class="list-group shadow-sm rounded overflow-hidden">
+            {% for category in categories %}
+                <a href="{% url 'categories_listing' category %}" class="list-group-item list-group-item-action py-3 px-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0 font-weight-medium">{{ category }}</span>
+                        
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 text-muted">
+             <p>No categories available yet.</p>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
+
+
+

@@ -1,9 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from .util import optimize_image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO 
-
+from .util import optimize_image
 
 class User(AbstractUser):
     pass
@@ -41,7 +40,7 @@ class Listing(models.Model):
                 )
                 self.image = optimized
             except Exception as e:
-                print(f"⚠️ Error optimizando: {e}")
+                print(f"Error optimizing: {e}")
         
         super().save(*args, **kwargs)
             
@@ -56,7 +55,7 @@ class Bid(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-amount']  # La primera consulta .first() siempre será la más alta
+        ordering = ['-amount'] 
         indexes = [models.Index(fields=['listing', '-amount'])]
 
     def __str__(self):
@@ -70,10 +69,10 @@ class Comment(models.Model):
      
      class Meta:
         ordering = ['-date']     
-        indexes = [models.Index(fields=['listing', '-date'])]  # Optimiza consultas
+        indexes = [models.Index(fields=['listing', '-date'])]  
 
      def __str__(self):
-        return f"{self.user.username} en {self.listing.title}"
+        return f"{self.user.username} in {self.listing.title}"
 class Watchlist(models.Model):
       user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
       listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watched_by")

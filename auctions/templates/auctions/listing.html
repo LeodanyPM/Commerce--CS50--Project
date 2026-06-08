@@ -3,138 +3,147 @@
 {% block body %}
 <div class="container mt-4">
     
-    <!-- ========================================== -->
-    <!-- TARJETA PRINCIPAL DEL ANUNCIO              -->
-    <!-- ========================================== -->
+   
+    <!-- card   -->
+    
     <div class="card shadow-sm">
         <div class="row no-gutters">
             
-            <!-- Columna Imagen -->
+            <!-- image col -->
             <div class="col-md-5">
                 {% if ad.image %}
                     <img src="{{ ad.image.url }}" class="img-fluid w-100 h-100" style="object-fit: cover; min-height: 300px;" alt="{{ ad.title }}">
                 {% else %}
                     <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 300px;">
-                        <span class="text-muted">Sin imagen</span>
+                        <span class="text-muted">No image</span>
                     </div>
                 {% endif %}
             </div>
 
-            <!-- Columna Detalles y Acciones -->
+            <!-- details and actions column -->
             <div class="col-md-7">
                 <div class="card-body">
                     
-                    <!-- Encabezado -->
+                    
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
+                        <!-- Title -->
+						<div>   
                             <h2 class="card-title mb-1">{{ ad.title }}</h2>
                             <span class="badge badge-secondary">{{ ad.category }}</span>
                         </div>
-                        {% if ad.active %}
-                            <span class="badge badge-success">Activa</span>
-                        {% else %}
-                            <span class="badge badge-danger">Cerrada</span>
-                        {% endif %}
+                        <div class="d-flex align-items-center">
+                            <!-- Add watchlist -->
+							{% if user.is_authenticated %}
+                                <form method="POST" action="{% url 'toggle_watchlist' ad.id %}" class="mr-2">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm {% if is_in_watchlist %}btn-warning{% else %}btn-primary{% endif %} px-2 py-1" style="font-size: 0.8rem; line-height: 1.2;">
+                                        {% if is_in_watchlist %} ⭐ Unfollow {% else %} ☆ Follow {% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
+							<!-- Auction Status -->
+                            {% if ad.active %}
+                                <span class="badge badge-success">Active</span>
+                            {% else %}
+                                <span class="badge badge-danger">Closed</span>
+                            {% endif %}
+                        </div>
                     </div>
-
+                     <!-- Author and date -->
                     <p class="text-muted mb-3">
-                        Por: <strong>{{ ad.user.username }}</strong> |  {{ ad.date|date:"d/m/Y" }}
+                        By: <strong>{{ ad.user.username }}</strong> | 📅 {{ ad.date|date:"d/m/Y" }}
                     </p>
 
-                    <!-- Precio / Puja Actual -->
+                    <!-- price -->
                     <div class="mb-3 p-3 bg-light rounded">
                         {% if current_bid %}
                             <h4 class="mb-0 text-success">${{ current_bid.amount }}</h4>
-                            <small class="text-muted">Puja actual por {{ current_bid.user.username }}</small>
+                            <small class="text-muted">Current bid for {{ current_bid.user.username }}</small>
                         {% else %}
                             <h4 class="mb-0 text-primary">${{ ad.price }}</h4>
-                            <small class="text-muted">Precio inicial (Sin pujas)</small>
+                            <small class="text-muted">Starting price (No bids)</small>
                         {% endif %}
                     </div>
 
-                    <!-- Descripción -->
+                    <!-- description -->
                     <p class="card-text">{{ ad.description|linebreaks }}</p>
 
-                    <!-- Banner de Ganador (Requisito 4) -->
+                    <!-- if is winner -->
                     {% if is_winner %}
-                        <div class="alert alert-success text-center font-weight-bold mt-3 mb-0">
-                             ¡Felicidades! Has ganado esta subasta.
+                        <div class="alert alert-success text-center font-weight-bold mb-3">
+                            🎉 Congratulations! You have won this auction.
                         </div>
                     {% endif %}
 
                     <hr class="my-3">
 
-                    <!-- ========================================== -->
-                    <!-- ACCIONES DE USUARIO                        -->
-                    <!-- ========================================== -->
-
-                    <!-- 1. WATCHLIST TOGGLE (Requisito 1) -->
-                    {% if user.is_authenticated %}
-                        <form method="POST" action="{% url 'toggle_watchlist' ad.id %}" class="mb-3">
-                            {% csrf_token %}
-                            {% if is_in_watchlist %}
-                                <button type="submit" class="btn btn-outline-warning btn-sm btn-block">
-                                    ⭐ Quitar de seguimiento
-                                </button>
-                            {% else %}
-                                <button type="submit" class="btn btn-outline-primary btn-sm btn-block">
-                                    ☆ Añadir a seguimiento
-                                </button>
-                            {% endif %}
-                        </form>
-                    {% endif %}
-
-                    <!-- 2. ÁREA DE PUJAS (Requisito 2) -->
-                    {% if user.is_authenticated and ad.active %}
-                        <form method="POST" action="{% url 'place_bid' ad.id %}" class="mb-3">
-                            {% csrf_token %}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                                </div>
-                                <input type="number" name="bid_amount" class="form-control" step="0.01" 
-                                       min="{% if current_bid %}{{ current_bid.amount }}{% else %}{{ ad.price }}{% endif %}" 
-                                       placeholder="Tu puja" required>
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-success">Pujar</button>
-                                </div>
+                    
+                    <!-- Conditional logic for participating in the auction  -->
+                    
+                    <div class="mb-3">
+                        {% if not ad.active %}
+                            <!--If Closed Auctions -->
+                            <div class="alert alert-secondary py-2 mb-0 text-center">
+                                🔒 Auction ended
+								<!-- If winner -->
+                                {% if ad.winner %}
+                                    <div class="mt-1"><strong>Winner:</strong> {{ ad.winner.username }}</div>
+                                {% else %}
+                                    <div class="mt-1 text-muted">There were no offers.</div>
+                                {% endif %}
                             </div>
-                            <small class="form-text text-muted">
-                                Mínimo requerido: ${% if current_bid %}{{ current_bid.amount }}{% else %}{{ ad.price }}{% endif %}
-                            </small>
-                        </form>
-                    {% elif not ad.active %}
-                        <div class="alert alert-secondary py-2 mb-3 text-center">🔒 Subasta cerrada</div>
-                    {% else %}
-                        <div class="alert alert-info py-2 mb-3 text-center">Inicia sesión para pujar</div>
-                    {% endif %}
-
-                    <!-- 3. CERRAR SUBASTA (Requisito 3) -->
-                    {% if request.user == ad.user and ad.active %}
-                        <form method="POST" action="{% url 'close_auction' ad.id %}" class="mb-0">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-block" 
-                                    onclick="return confirm('¿Cerrar subasta? El mejor postor será declarado ganador.')">
-                                🛑 Cerrar Subasta
-                            </button>
-                        </form>
-                    {% endif %}
+                        <!-- If user==creator   -->
+                        {% elif request.user == ad.user %}
+                            <!-- only option to close  --> 
+                            <form method="POST" action="{% url 'close_auction' ad.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm btn-block"
+                                         onclick="return confirm('Closing the auction? The highest bidder wins.')">
+                                    🛑 Close Auction
+                                </button>
+                            </form>
+                        
+						<!--  Only registered users can participate in the auction, excluding the creator.-->
+                        {% elif user.is_authenticated %}                            
+                            <form method="POST" action="{% url 'place_bid' ad.id %}">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend"><span class="input-group-text">$</span></div>
+                                    <input type="number" name="bid_amount" class="form-control" step="0.01"
+                                           min="{% if current_bid %}{{ current_bid.amount }}{% else %}{{ ad.price }}{% endif %}"
+                                           placeholder="Bid amount" required>
+                                    <div class="input-group-append">
+                                         <button type="submit" class="btn btn-success">Bid</button>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted mt-1">
+                                     Minimum required: ${% if current_bid %}{{ current_bid.amount }}{% else %}{{ ad.price }}{% endif %}
+                                </small>
+                            </form>
+                        
+						<!--  not logged in  -->
+                        {% else %}                            
+                            <div class="alert alert-info py-2 mb-0 text-center small">
+                                 <a href="{% url 'login' %}">Log in</a> to participate in this auction.
+                            </div>
+                        {% endif %}
+                    </div>
 
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- SECCIÓN DE COMENTARIOS                     -->
-    <!-- ========================================== -->
+    
+    <!--   Comments section    -->
+    
     <div class="card mt-4 shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Comentarios <span class="badge badge-light border">{{ comments.count }}</span></h5>
+            <h5 class="mb-0">Comments <span class="badge badge-light border">{{ comments.count }}</span></h5>
         </div>
         <div class="card-body">
             
-            <!-- Formulario de comentario (ARRIBA) -->
+            <!--Comments Form -->
             {% if user.is_authenticated %}
                 <form method="POST" class="mb-4">
                     {% csrf_token %}
@@ -144,16 +153,16 @@
                             <div class="text-danger small mt-1">{{ form.comment.errors }}</div>
                         {% endif %}
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm">Publicar comentario</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Post comment</button>
                 </form>
                 <hr>
             {% else %}
                 <div class="alert alert-secondary mb-4">
-                    <a href="{% url 'login' %}" class="alert-link">Inicia sesión</a> para dejar un comentario.
+                    <a href="{% url 'login' %}" class="alert-link">Log in</a> to leave a comment.
                 </div>
             {% endif %}
 
-            <!-- Lista de comentarios -->
+            <!-- All Comments -->
             {% if comments %}
                 <ul class="list-unstyled">
                     {% for c in comments %}
@@ -163,13 +172,13 @@
                                     <h6 class="mt-0 mb-1"><strong>{{ c.user.username }}</strong></h6>
                                     <small class="text-muted">{{ c.date|date:"d M Y, H:i" }}</small>
                                 </div>
-                                <p class="mb-0 text-secondary">{{ c.comment|linebreaks }}</p>
+                                 <p class="mb-0 text-secondary">{{ c.comment|linebreaks }}</p>
                             </div>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="text-muted text-center py-3">Sé el primero en comentar.</p>
+                 <p class="text-muted text-center py-3">Be the first to comment.</p>
             {% endif %}
 
         </div>
