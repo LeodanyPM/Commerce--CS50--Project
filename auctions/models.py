@@ -59,7 +59,8 @@ class Bid(models.Model):
         indexes = [models.Index(fields=['listing', '-amount'])]
 
     def __str__(self):
-        return f"{self.user.username} : ${self.amount}" 
+        return f"{self.user.username if self.user else 'Unknown'} : ${self.amount}"
+        
         
 class Comment(models.Model):
      listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comments')
