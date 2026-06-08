@@ -8,7 +8,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from decimal import Decimal, InvalidOperation
 from .forms import ListingForm, CommentForm
-from .util import optimize_image
 from .models import User, Listing, Watchlist, Comment, Bid, Category 
 
 
@@ -21,7 +20,7 @@ def index(request):
 
 @login_required(login_url='/login') 
 def watchlist(request):	
-    listings = Listing.objects.filter(watched_by__user=request.user).select_related('user')
+    listings = Listing.objects.filter(watched_by__user=request.user)  
     context = {'listing':listings}
     return render(request, 'auctions/watchlist.html', context) 
         

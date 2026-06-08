@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO 
-from .util import optimize_image
+
 
 class User(AbstractUser):
     pass
@@ -30,21 +30,7 @@ class Listing(models.Model):
     class Meta:
         ordering = ['-date']
 
-    def save(self, *args, **kwargs):
-        
-        if self.image and hasattr(self.image, 'file'):
-            if isinstance(self.image.file, InMemoryUploadedFile):
-                try:
-                    optimized = optimize_image(
-                        self.image.file,
-                        max_size=(1200, 1200),
-                        quality=85
-                    )
-                    self.image = optimized
-                except Exception as e:
-                    print(f"Error optimizing: {e}")
-        
-        super().save(*args, **kwargs)
+
                 
     def __str__(self):
         return self.title
@@ -58,7 +44,7 @@ class Bid(models.Model):
 
     class Meta:
         ordering = ['-amount'] 
-        indexes = [models.Index(fields=['listing', '-amount'])]
+        
 
     def __str__(self):
         return f"{self.user.username if self.user else 'Unknown'} : ${self.amount}"
@@ -72,7 +58,7 @@ class Comment(models.Model):
      
      class Meta:
         ordering = ['-date']     
-        indexes = [models.Index(fields=['listing', '-date'])]  
+         
 
      def __str__(self):
         return f"{self.user.username} in {self.listing.title}"
@@ -82,6 +68,6 @@ class Watchlist(models.Model):
       date = models.DateTimeField(auto_now_add=True)
       class Meta:
           constraints = [models.UniqueConstraint(fields=['user', 'listing'], name='unique_user_listing')]
-          indexes = [models.Index(fields=['user',])]
+          
       def __str__(self):
       	 return  f"{self.user.username} : {self.listing.title}"    
