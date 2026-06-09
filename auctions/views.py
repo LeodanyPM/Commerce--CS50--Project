@@ -15,21 +15,32 @@ from .models import User, Listing, Watchlist, Comment, Bid, Category
 
 def index(request):
     my_data = Listing.objects.filter(active=True).annotate(max_bid=Max('bids__amount')).order_by('-date')
-    context = {'listing' : my_data }    
-    return render(request, "auctions/index.html", context)
-
+    #context = {'listing' : my_data }    
+    #return render(request, "auctions/index.html", context)
+    context = {'listing':my_data,
+                   'text_1':"No ads available",
+                   'text_2': "Be the first to post one!",
+                   'url':"create_listing"}
+    return render(request, 'auctions/list_listing.html', context)
+    
 @login_required(login_url='/login') 
 def watchlist(request):	
-    listings = Listing.objects.filter(watched_by__user=request.user)  
-    context = {'listing':listings}
-    return render(request, 'auctions/watchlist.html', context) 
+    listings = Listing.objects.filter(watched_by__user=request.user).annotate(max_bid=Max('bids__amount'))  
+    context = {'listing':listings,
+                   'text_1':"Your watchlist is empty",
+                   'text_2': "Browse Active Listings",
+                   'url':"index"}
+    return render(request, 'auctions/list_listing.html', context) 
         
 
 @login_required(login_url='/login') 
 def my_listings(request):
-    my_listings= Listing.objects.filter(user=request.user)
-    context = {'listing':my_listings}
-    return render(request, 'auctions/my_listings.html',context)
+    my_listings= Listing.objects.filter(user=request.user).annotate(max_bid=Max('bids__amount'))
+    context = {'listing':my_listings,
+                   'text_1':"No listings created yet",
+                   'text_2': "Create a Listing",
+                   'url':"create_listing"}
+    return render(request, 'auctions/list_listing.html', context) 
     
 def categories(request):
     categories= Category.objects.all()
@@ -38,9 +49,12 @@ def categories(request):
 
 
 def categories_listing(request, category):
-        listings = Listing.objects.filter(category__category=category)
-        context = {'listing':listings, 'category':category}
-        return render(request, 'auctions/categories_listing.html', context)
+        listings = Listing.objects.filter(category__category=category).annotate(max_bid=Max('bids__amount'))
+        context = {'listing':listings, 'category':category,
+                   'text_1':"No listings in this category",
+                   'text_2': "Browse Active Listings",
+                   'url':"index"}
+        return render(request, 'auctions/list_listing.html', context)
 
 def login_view(request):
     if request.method == "POST":
