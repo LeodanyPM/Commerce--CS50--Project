@@ -6,19 +6,18 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        
         <!-- header: page + user info -->
-        <header class="bg-white border-bottom py-3">
+        <header class="bg-white border-bottom py-3 ">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center">
-                    <h1 class="h3 mb-0 font-weight-bold text-primary">Auctions</h1>
-                    <div class="ml-auto d-flex align-items-center">
+                    <h1 class="h3 mb-0 fw-bolder text-primary">Auctions</h1>
+                    <div class="ms-auto d-flex align-items-center">
                         {% if user.is_authenticated %}
-                            <small class="text-muted mr-2">Signed in as</small>
+                            <small class="text-muted me-2">Signed in as</small>
                             <strong class="text-primary">{{ user.username }}</strong>
                         {% else %}
                             <small class="text-muted">Not signed in</small>
@@ -28,35 +27,35 @@
             </div>
         </header>
 
-        <!-- NAV: Main links + Messages inline -->
+        <!-- Nav: Main links + Messages inline -->
         <nav class="bg-light border-bottom">
             <div class="container-fluid px-4">
-                <ul class="nav py-2">
+                <ul class="nav nav-pills py-2">
                     
                     <!-- links  -->
                     <li class="nav-item">
-                        <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'index' %}">Active Listings</a>
+                        <a class="nav-link px-3 text-primary fw-normal" href="{% url 'index' %}">Active Listings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'categories' %}">Categories</a>
+                        <a class="nav-link px-3 text-primary fw-normal" href="{% url 'categories' %}">Categories</a>
                     </li>
                     
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'create_listing' %}">Create Listings</a>
+                            <a class="nav-link px-3 text-primary fw-normal" href="{% url 'create_listing' %}">Create Listings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'watchlist' %}">Watchlist</a>
+                            <a class="nav-link px-3 text-primary fw-normal" href="{% url 'watchlist' %}">Watchlist</a>
                         </li> 
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'my_listings' %}">My Listings</a>
+                            <a class="nav-link px-3 text-primary fw-normal" href="{% url 'my_listings' %}">My Listings</a>
                         </li> 
                         
                         <!-- Messages -->
 						{% if messages %}
 							{% for message in messages %}
 								<li class="nav-item d-flex align-items-center">
-									<span class="nav-link text-success font-weight-medium px-3" style="cursor: default; pointer-events: none;">
+									<span class="nav-link text-success fw-normal px-3" >
 										{{ message }}
 									</span>
 								</li>
@@ -75,15 +74,15 @@
 						{% endif %}
                         
                         <!-- auth links  -->
-                        <li class="nav-item ml-md-auto">
-                            <a class="nav-link px-3 text-danger font-weight-medium" href="{% url 'logout' %}">Log Out</a>
+                        <li class="nav-item ms-md-auto">
+                            <a class="nav-link px-3 text-danger fw-normal" href="{% url 'logout' %}">Log Out</a>
                         </li>
                     {% else %}
-                        <li class="nav-item ml-md-auto">
-                            <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'login' %}">Log In</a>
+                        <li class="nav-item ms-md-auto">
+                            <a class="nav-link px-3 text-primary fw-normal" href="{% url 'login' %}">Log In</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-primary font-weight-medium" href="{% url 'register' %}">Register</a>
+                            <a class="nav-link px-3 text-primary fw-normal" href="{% url 'register' %}">Register</a>
                         </li>
                     {% endif %}
                 </ul>
